@@ -1,4 +1,4 @@
-
+ 
 html_code = '''<!DOCTYPE html>
 <html lang="es">
 <head>
@@ -15,268 +15,245 @@ html_code = '''<!DOCTYPE html>
         body {
             font-family: 'Arial', sans-serif;
             overflow: hidden;
-            height: 100vh;
-            width: 100vw;
+            background-color: #000;
         }
 
-        /* Background Image */
-        #background {
+        /* Background Container */
+        .background {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
-            height: 100%;
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            transition: filter 1s ease;
+            height: 100vh;
             z-index: 1;
         }
 
-        /* Overlay oscuro para difuminar */
-        #overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
+        /* Desktop Background */
+        .bg-desktop {
+            display: block;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0);
-            backdrop-filter: blur(0px);
-            transition: all 1s ease;
-            z-index: 2;
+            object-fit: cover;
+        }
+
+        /* Mobile Background */
+        .bg-mobile {
+            display: none;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        @media (max-width: 768px) {
+            .bg-desktop {
+                display: none;
+            }
+            .bg-mobile {
+                display: block;
+            }
+        }
+
+        /* Button Container */
+        .button-container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+            transition: opacity 0.8s ease-out;
+        }
+
+        .button-container.hidden {
+            opacity: 0;
             pointer-events: none;
         }
 
-        /* Container principal */
-        .container {
-            position: relative;
-            z-index: 10;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            width: 100vw;
-        }
-
-        /* Botón ENTRAR */
-        #enterBtn {
-            padding: 20px 60px;
-            font-size: 24px;
-            font-weight: bold;
-            letter-spacing: 4px;
+        /* Enter Button */
+        .enter-btn {
             background: transparent;
-            border: 2px solid white;
-            color: white;
+            border: 2px solid #fff;
+            color: #fff;
+            padding: 20px 60px;
+            font-size: 18px;
+            letter-spacing: 4px;
             cursor: pointer;
+            position: relative;
+            overflow: hidden;
             transition: all 0.3s ease;
             text-transform: uppercase;
-            position: relative;
-            z-index: 20;
+            font-weight: bold;
         }
 
-        #enterBtn:hover {
-            background: white;
-            color: black;
-            transform: scale(1.05);
-            box-shadow: 0 0 30px rgba(255, 255, 255, 0.5);
+        .enter-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
         }
 
-        /* Mensaje final */
-        #message {
-            display: none;
-            text-align: center;
-            color: white;
-            opacity: 0;
-            transition: opacity 1.5s ease;
-            z-index: 20;
-            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);
-        }
-
-        #message h1 {
-            font-size: 72px;
-            font-weight: 900;
-            letter-spacing: 12px;
-            margin-bottom: 30px;
-            text-transform: uppercase;
-        }
-
-        #message p {
-            font-size: 24px;
-            font-weight: 300;
-            letter-spacing: 2px;
-            margin-bottom: 15px;
-            line-height: 1.6;
-        }
-
-        #message .signature {
-            font-size: 20px;
-            font-style: italic;
-            margin-top: 20px;
-            opacity: 0.9;
-        }
-
-        /* Líneas de polvo/cristal animación */
-        .dust-line {
+        /* White Powder Lines Animation */
+        .powder-line {
             position: absolute;
-            width: 3px;
-            height: 0;
-            background: linear-gradient(to bottom, 
-                rgba(255, 255, 255, 0),
-                rgba(255, 255, 255, 0.9),
-                rgba(255, 255, 255, 0));
-            transform-origin: center;
+            background: linear-gradient(90deg, 
+                transparent 0%, 
+                rgba(255, 255, 255, 0.9) 20%, 
+                rgba(255, 255, 255, 1) 50%, 
+                rgba(255, 255, 255, 0.9) 80%, 
+                transparent 100%);
+            height: 2px;
+            width: 0;
             opacity: 0;
-            z-index: 15;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
         }
 
-        @keyframes dustExpand {
+        .powder-line.active {
+            animation: powderSpread 1.5s ease-out forwards;
+        }
+
+        @keyframes powderSpread {
             0% {
-                height: 0;
+                width: 0;
                 opacity: 0;
             }
-            50% {
-                height: 150px;
+            20% {
                 opacity: 1;
             }
             100% {
-                height: 300px;
+                width: 300px;
                 opacity: 0;
             }
         }
 
-        /* Responsive */
+        /* Message Container */
+        .message-container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 5;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 1.5s ease-in;
+            padding: 20px;
+        }
+
+        .message-container.visible {
+            opacity: 1;
+        }
+
+        .message-text {
+            color: #fff;
+            font-size: 28px;
+            line-height: 1.6;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+            letter-spacing: 2px;
+        }
+
+        .message-text .brand {
+            font-size: 48px;
+            font-weight: bold;
+            display: block;
+            margin-bottom: 20px;
+            letter-spacing: 8px;
+        }
+
+        .message-text .signature {
+            font-size: 20px;
+            margin-top: 30px;
+            font-style: italic;
+            opacity: 0.8;
+        }
+
         @media (max-width: 768px) {
-            #message h1 {
-                font-size: 48px;
-                letter-spacing: 8px;
+            .message-text {
+                font-size: 20px;
             }
-
-            #message p {
-                font-size: 18px;
+            .message-text .brand {
+                font-size: 36px;
             }
-
-            #message .signature {
+            .message-text .signature {
                 font-size: 16px;
             }
-
-            #enterBtn {
+            .enter-btn {
                 padding: 15px 40px;
-                font-size: 20px;
+                font-size: 16px;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Background -->
-    <div id="background"></div>
-    
-    <!-- Overlay para oscurecer -->
-    <div id="overlay"></div>
+    <!-- Background Images -->
+    <div class="background">
+        <img src="images/background-desktop.jpg" alt="CLOSBA Background" class="bg-desktop">
+        <img src="images/background-mobile.jpg" alt="CLOSBA Background Mobile" class="bg-mobile">
+    </div>
 
-    <!-- Contenido -->
-    <div class="container">
-        <!-- Botón -->
-        <button id="enterBtn">ENTRAR</button>
+    <!-- Enter Button with Powder Animation -->
+    <div class="button-container" id="buttonContainer">
+        <button class="enter-btn" id="enterBtn">ENTRAR</button>
+    </div>
 
-        <!-- Mensaje -->
-        <div id="message">
-            <h1>CLOSBA</h1>
-            <p>Lo mejor está por venir,<br>espéralo.</p>
-            <p class="signature">- Angelus</p>
+    <!-- Message -->
+    <div class="message-container" id="messageContainer">
+        <div class="message-text">
+            <span class="brand">CLOSBA</span>
+            Lo mejor está por venir,<br>espéralo.
+            <div class="signature">- Angelus</div>
         </div>
     </div>
 
     <script>
-        // Detectar dispositivo y cargar imagen correcta
-        const background = document.getElementById('background');
-        const isMobile = window.innerWidth <= 768;
-        
-        if (isMobile) {
-            background.style.backgroundImage = "url('images/background-mobile.jpg')";
-        } else {
-            background.style.backgroundImage = "url('images/background-desktop.jpg')";
-        }
-
-        // Animación al hacer click
         const enterBtn = document.getElementById('enterBtn');
-        const message = document.getElementById('message');
-        const overlay = document.getElementById('overlay');
-        const container = document.querySelector('.container');
+        const buttonContainer = document.getElementById('buttonContainer');
+        const messageContainer = document.getElementById('messageContainer');
 
         enterBtn.addEventListener('click', function() {
-            // Crear líneas de polvo/cristal
-            createDustLines();
+            // Create powder lines animation
+            createPowderLines();
             
-            // Ocultar botón
-            enterBtn.style.opacity = '0';
+            // Hide button after animation
             setTimeout(() => {
-                enterBtn.style.display = 'none';
-            }, 300);
-
-            // Oscurecer y difuminar background
-            overlay.style.background = 'rgba(0, 0, 0, 0.7)';
-            overlay.style.backdropFilter = 'blur(8px)';
-            background.style.filter = 'brightness(0.4) blur(3px)';
-
-            // Mostrar mensaje después de la animación
-            setTimeout(() => {
-                message.style.display = 'block';
+                buttonContainer.classList.add('hidden');
+                
+                // Show message
                 setTimeout(() => {
-                    message.style.opacity = '1';
-                }, 100);
-            }, 800);
+                    messageContainer.classList.add('visible');
+                }, 800);
+            }, 1500);
         });
 
-        function createDustLines() {
-            const numLines = 12;
-            const centerX = window.innerWidth / 2;
-            const centerY = window.innerHeight / 2;
-
-            for (let i = 0; i < numLines; i++) {
-                const line = document.createElement('div');
-                line.className = 'dust-line';
-                
-                const angle = (i * 360) / numLines;
-                const radian = (angle * Math.PI) / 180;
-                
-                line.style.left = centerX + 'px';
-                line.style.top = centerY + 'px';
-                line.style.transform = `rotate(${angle}deg)`;
-                line.style.animation = `dustExpand 1s ease-out forwards`;
-                line.style.animationDelay = `${i * 0.05}s`;
-                
-                container.appendChild(line);
-                
-                // Remover línea después de la animación
+        function createPowderLines() {
+            const btnRect = enterBtn.getBoundingClientRect();
+            const centerX = btnRect.left + btnRect.width / 2;
+            const centerY = btnRect.top + btnRect.height / 2;
+            
+            // Create multiple powder lines radiating from button
+            for (let i = 0; i < 12; i++) {
                 setTimeout(() => {
-                    line.remove();
-                }, 1500);
+                    const line = document.createElement('div');
+                    line.className = 'powder-line';
+                    
+                    // Random angle
+                    const angle = (i / 12) * Math.PI * 2;
+                    const distance = 100;
+                    
+                    line.style.left = centerX + 'px';
+                    line.style.top = centerY + 'px';
+                    line.style.transform = `rotate(${angle}rad)`;
+                    line.style.transformOrigin = '0 50%';
+                    
+                    document.body.appendChild(line);
+                    
+                    // Trigger animation
+                    setTimeout(() => {
+                        line.classList.add('active');
+                    }, 50);
+                    
+                    // Remove line after animation
+                    setTimeout(() => {
+                        line.remove();
+                    }, 1500);
+                }, i * 100);
             }
         }
-
-        // Recargar si cambia el tamaño de ventana
-        window.addEventListener('resize', function() {
-            const newIsMobile = window.innerWidth <= 768;
-            if (newIsMobile !== isMobile) {
-                location.reload();
-            }
-        });
     </script>
 </body>
 </html>'''
-
-print("✅ Código actualizado con:")
-print("   - Overlay oscuro con blur")
-print("   - Background se oscurece y difumina")
-print("   - Texto con sombra para mejor legibilidad")
-print("   - Transiciones suaves")
-print("\n📋 Copia este código y reemplaza tu index.html")
-
- # Result 
-✅ Código actualizado con:
-   - Overlay oscuro con blur
-   - Background se oscurece y difumina
-   - Texto con sombra para mejor legibilidad
-   - Transiciones suaves
-
-📋 Copia este código y reemplaza tu index.html
